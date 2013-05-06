@@ -59,7 +59,7 @@ class RentModel(object):
                           comment=comment,
                           settled=False)
         session.add(txn)
-        self.send_mail(from_user, [to_user], '''
+        self.send_mail(from_user, [to_user], '''\
 Subject: %s sent you %s
 
 for %s
