@@ -1,0 +1,29 @@
+/* Why is serif the default, anyway? */
+body {
+    font-family: sans-serif;
+}
+
+/* Send-money form */
+form {
+}
+form ul {
+    padding: 0;
+    text-align: right;
+    width: 250px;
+}
+form li {
+    list-style: none;
+    padding: 0.5em 0 0 0;
+    text-align: right;
+}
+form label {
+    padding: 0 0.5em 0 0;
+}
+
+/* Transaction table */
+th {
+    text-align: left;
+}
+th,td {
+    padding: 0.25em 1em 0.25em 0;
+}

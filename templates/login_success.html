@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+<meta http-equiv="refresh" content="0;URL='{{ next_url }}'">
+<script type="text/javascript">document.location = "{{ next_url }}";</script>
+{% end block %}

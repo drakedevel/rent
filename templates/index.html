@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from rent.template_utils import format_cents %}
+
+{% block body %}
+<p>
+  Logged in as {{ user }}. <a href="{{ reverse_url('logout') }}">Logout</a>
+</p>
+<h2>Send money</h2>
+<p>
+  <form action="{{ reverse_url('pay') }}" method="POST">
+    <ul>
+      {% module xsrf_form_html() %}
+      <li><label for="to_user">To:</label><input type="textbox" name="to_user" />
+      <li><label for="amount">Amount:</label><input type="textbox" name="amount" />
+      <li><input type="submit" value="Pay" />
+    </ul>
+  </form>
+</p>
+<h2>Transactions</h2>
+<p>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Amount</th>
+    </tr>
+    {% for txn in transactions %}
+    <tr>
+      <td>{{ txn.id }}</td>
+      <td>{{ txn.date }}</td>
+      <td>{{ txn.from_user }}</td>
+      <td>{{ txn.to_user }}</td>
+      <td>{{ format_cents(txn.amount) }}</td>
+    </tr>
+    {% end for %}
+  </table>
+</p>
+{% end block %}

@@ -1,0 +1,4 @@
+{
+    "cookie_secret": "CHANGE_ME",
+    "database": "mysql://USER:PASSWORD@localhost/DATABASE"
+}
