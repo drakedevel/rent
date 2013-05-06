@@ -60,10 +60,11 @@ class RentModel(object):
                           settled=False)
         session.add(txn)
         self.send_mail(from_user, [to_user], '''\
+To: %s
 Subject: %s sent you %s
 
 for %s
-''' % (from_user, format_cents(None, amount), comment))
+''' % (to_user, from_user, format_cents(None, amount), comment))
 
     def create_user(self, session, username, password):
         salt = bcrypt.gensalt()
