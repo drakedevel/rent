@@ -3,7 +3,7 @@ from datetime import datetime
 from smtplib import SMTP
 
 import bcrypt
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, create_engine, or_
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text, create_engine, or_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -28,6 +28,7 @@ class Transaction(Base):
     from_user = Column(String, ForeignKey('users.username'))
     to_user = Column(String, ForeignKey('users.username'))
     amount = Column(Integer)
+    comment = Column(Text)
     settled = Column(Boolean)
 
 def safe_equals(a, b):
@@ -49,18 +50,20 @@ class RentModel(object):
         test_hash = bcrypt.hashpw(password, entry.salt)
         return safe_equals(test_hash, entry.password_hash)
 
-    def create_transaction(self, session, from_user, to_user, amount):
+    def create_transaction(self, session, from_user, to_user, amount, comment):
         date = datetime.now()
         txn = Transaction(date=date,
                           from_user=from_user,
                           to_user=to_user,
                           amount=amount,
+                          comment=comment,
                           settled=False)
         session.add(txn)
         self.send_mail(from_user, [to_user], '''
-Subject: %s sent you %s <eom>
+Subject: %s sent you %s
 
-''' % (from_user, format_cents(None, amount)))
+for %s
+''' % (from_user, format_cents(None, amount), comment))
 
     def create_user(self, session, username, password):
         salt = bcrypt.gensalt()

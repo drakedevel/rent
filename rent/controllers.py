@@ -67,8 +67,10 @@ class PayHandler(BaseHandler):
     def post(self, session):
         to_user = self.get_argument('to_user')
         amount = round(float(self.get_argument('amount')) * 100)
+        comment = self.get_argument('comment')
         self.model.create_transaction(session,
                                       from_user=self.current_user,
                                       to_user=to_user,
-                                      amount=amount)
+                                      amount=amount,
+                                      comment=comment)
         self.safe_redirect(self.reverse_url('home'))
