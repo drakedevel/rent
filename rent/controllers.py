@@ -47,7 +47,6 @@ class LoginHandler(BaseHandler):
 
     @with_session
     def post(self, session):
-        print "here"
         username = self.get_argument('username')
         password = self.get_argument('password')
         next_url = self.get_argument('next', '/')
