@@ -63,7 +63,7 @@ class RentModel(object):
 Subject: %s sent you %s
 
 for %s
-''' % (from_user, format_cents(None, amount)), comment)
+''' % (from_user, format_cents(None, amount), comment))
 
     def create_user(self, session, username, password):
         salt = bcrypt.gensalt()
