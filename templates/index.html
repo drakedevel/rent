@@ -12,6 +12,7 @@
       {% module xsrf_form_html() %}
       <li><label for="to_user">To:</label><input type="textbox" name="to_user" />
       <li><label for="amount">Amount:</label><input type="textbox" name="amount" />
+      <li><label for="comment">Comment:</label><input type="textbox" name="comment" />
       <li><input type="submit" value="Pay" />
     </ul>
   </form>
@@ -25,6 +26,7 @@
       <th>From</th>
       <th>To</th>
       <th>Amount</th>
+      <th>Comment</th>
     </tr>
     {% for txn in transactions %}
     <tr>
@@ -33,6 +35,7 @@
       <td>{{ txn.from_user }}</td>
       <td>{{ txn.to_user }}</td>
       <td>{{ format_cents(txn.amount) }}</td>
+      <td>{{ txn.comment }}</td>
     </tr>
     {% end for %}
   </table>
