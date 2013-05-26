@@ -50,6 +50,13 @@ class RentModel(object):
         test_hash = bcrypt.hashpw(password, entry.salt)
         return safe_equals(test_hash, entry.password_hash)
 
+    def change_password(self, session, username, password):
+        entry = session.query(User).get(username)
+        if entry is None:
+            raise Exception("User does not exist")
+        password_hash = bcrypt.hashpw(password, entry.salt)
+        entry.password_hash = password_hash
+
     def create_transaction(self, session, from_user, to_user, amount, comment):
         date = datetime.now()
         txn = Transaction(date=date,
