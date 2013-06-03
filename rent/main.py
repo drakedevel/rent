@@ -25,7 +25,7 @@ ROUTES = [
 SETTINGS = {
     'cookie_secret': None, # Define this in settings.json
     'database': None, # Define this in settings.json
-    'debug': True,
+    'debug': False,
     'login_url': '/login',
     'static_path': STATIC_PATH,
     'template_path': TEMPLATE_PATH,
@@ -38,14 +38,13 @@ except IOError:
     logging.warn("Unable to load settings from %s", SETTINGS_PATH)
 
 def main():
-
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     model = RentModel(SETTINGS['database'])
     app = web.Application(ROUTES,
                           model = model,
                           **SETTINGS)
-    app.listen(8888, address='0.0.0.0')
+    app.listen(26062, address='127.0.0.1')
     IOLoop.instance().start()
 
 def script():

@@ -79,6 +79,16 @@ for %s
         user = User(username=username, salt=salt, password_hash=password_hash)
         session.add(user)
 
+    def get_users(self, session):
+        return session.query(User.username)
+
+    def get_unresolved_transactions(self, session):
+        return session.query(Transaction).filter(Transaction.settled == False)
+
+    def resolve_transactions(self, transactions):
+        for txn in transactions:
+            txn.settled = True
+
     def get_recent_transactions(self, session, username):
         return session.query(Transaction).filter(or_(Transaction.from_user == username,
                                                      Transaction.to_user == username))

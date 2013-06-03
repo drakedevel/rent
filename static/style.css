@@ -17,6 +17,10 @@ form li {
     text-align: right;
 }
 form label {
+    width: 5em;
+    display: block;
+    float: left;
+    text-align: right;
     padding: 0 0.5em 0 0;
 }
 

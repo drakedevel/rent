@@ -10,7 +10,13 @@
   <form action="{{ reverse_url('pay') }}" method="POST">
     <ul>
       {% module xsrf_form_html() %}
-      <li><label for="to_user">To:</label><input type="textbox" name="to_user" />
+      <li><label for="to_user">To:</label>
+      <select name="to_user">
+          {% for to_user in to_users %}
+          <option value="{{to_user.username}}"> {{to_user.username}}</option>
+          {% end for %}
+      </select>
+
       <li><label for="amount">Amount:</label><input type="textbox" name="amount" />
       <li><label for="comment">Comment:</label><input type="textbox" name="comment" />
       <li><input type="submit" value="Pay" />
