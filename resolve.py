@@ -1,6 +1,4 @@
 import rent.main as r
-from collections import defaultdict
-from rent.model import RentModel
 from rent.ui_methods import format_cents
 
 import sys
