@@ -48,7 +48,7 @@ def determine_debts(session):
             print msg
 
     if not dry_run:
-        r.model.resolve_transactions(txns)
+        r.model.resolve_transactions(debts)
 
     assert total_debts == 0, "Something went wrong resolving debts..."
 
