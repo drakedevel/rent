@@ -17,7 +17,7 @@
           {% end for %}
       </select>
 
-      <li><label for="amount">Amount:</label><input type="textbox" name="amount" />
+      <li><label for="amount">Amount:</label><input type="number" name="amount" />
       <li><label for="comment">Comment:</label><input type="textbox" name="comment" />
       <li><input type="submit" value="Pay" />
     </ul>
@@ -36,7 +36,6 @@
     </tr>
     {% for txn in transactions %}
     <tr>
-      <td>{{ txn.id }}</td>
       <td>{{ txn.date }}</td>
       <td>{{ txn.from_user }}</td>
       <td>{{ txn.to_user }}</td>
