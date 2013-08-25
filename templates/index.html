@@ -27,16 +27,15 @@
 <p>
   <table>
     <tr>
-      <th>ID</th>
       <th>Date</th>
       <th>From</th>
       <th>To</th>
       <th>Amount</th>
-      <th>Comment</th>
+      <th>Note</th>
     </tr>
     {% for txn in transactions %}
     <tr>
-      <td>{{ txn.date }}</td>
+      <td>{{ txn.date.strftime("%m/%d %H:%M") }}</td>
       <td>{{ txn.from_user }}</td>
       <td>{{ txn.to_user }}</td>
       <td>{{ format_cents(txn.amount) }}</td>
