@@ -2,46 +2,26 @@
 {% from rent.template_utils import format_cents %}
 
 {% block body %}
-<p>
-  Logged in as {{ user }}. <a href="{{ reverse_url('logout') }}">Logout</a>
-</p>
 <h2>Send money</h2>
-<p>
-  <form action="{{ reverse_url('pay') }}" method="POST">
-    <ul>
-      {% module xsrf_form_html() %}
-      <li><label for="to_user">To:</label>
-      <select name="to_user">
-          {% for to_user in to_users %}
-          <option value="{{to_user.username}}"> {{to_user.username}}</option>
-          {% end for %}
-      </select>
+<form action="{{ reverse_url('pay') }}" method="POST" role="form">
+  {% module xsrf_form_html() %}
+  <div class="form-group">
+    <label for="to_user">To:</label>
+    <select class="form-control" name="to_user">
+      {% for to_user in to_users %}
+      <option value="{{to_user.username}}">{{to_user.username}}</option>
+      {% end for %}
+    </select>
+  </div>
 
-      <li><label for="amount">Amount:</label><input type="number" name="amount" />
-      <li><label for="comment">Comment:</label><input type="textbox" name="comment" />
-      <li><input type="submit" value="Pay" />
-    </ul>
-  </form>
-</p>
-<h2>Transactions</h2>
-<p>
-  <table>
-    <tr>
-      <th>Date</th>
-      <th>From</th>
-      <th>To</th>
-      <th>Amount</th>
-      <th>Note</th>
-    </tr>
-    {% for txn in transactions %}
-    <tr>
-      <td>{{ txn.date.strftime("%m/%d %H:%M") }}</td>
-      <td>{{ txn.from_user }}</td>
-      <td>{{ txn.to_user }}</td>
-      <td>{{ format_cents(txn.amount) }}</td>
-      <td>{{ txn.comment }}</td>
-    </tr>
-    {% end for %}
-  </table>
-</p>
+  <div class="form-group">
+    <label for="amount">Amount:</label>
+    <input type="number" class="form-control" name="amount" placeholder="Amount to pay" />
+  </div>
+  <div class="form-group">
+    <label for="comment">Comment:</label>
+    <input type="text" class="form-control" name="comment" placeholder="Comment" />
+  </div>
+  <button type="submit" class="btn btn-default">Pay</button>
+</form>
 {% end block %}

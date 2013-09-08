@@ -35,12 +35,18 @@ class HomeHandler(BaseHandler):
     @web.authenticated
     @with_session
     def get(self, session):
-        transactions = self.model.get_recent_transactions(session, self.current_user)
         users = self.model.get_users(session)
         self.render('index.html',
-                    user=self.current_user,
-                    to_users=users,
+                    to_users=users)
+
+class TransactionsHandler(BaseHandler):
+    @web.authenticated
+    @with_session
+    def get(self, session):
+        transactions = self.model.get_recent_transactions(session, self.current_user)
+        self.render('transactions.html',
                     transactions=transactions)
+
 
 class LoginHandler(BaseHandler):
     def get(self):

@@ -17,6 +17,7 @@ TEMPLATE_PATH = os.path.join(APP_PATH, 'templates')
 
 ROUTES = [
     web.url(r'/', controllers.HomeHandler, name='home'),
+    web.url(r'/transactions', controllers.TransactionsHandler, name='transactions'),
     web.url(r'/login', controllers.LoginHandler),
     web.url(r'/logout', controllers.LogoutHandler, name='logout'),
     web.url(r'/pay', controllers.PayHandler, name='pay'),
@@ -44,7 +45,7 @@ def main():
     app = web.Application(ROUTES,
                           model = model,
                           **SETTINGS)
-    app.listen(26062, address='127.0.0.1')
+    app.listen(26062, address='0.0.0.0')
     IOLoop.instance().start()
 
 def script():

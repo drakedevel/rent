@@ -47,7 +47,7 @@ class RentModel(object):
         entry = session.query(User).get(username)
         if entry is None:
             return False
-        test_hash = bcrypt.hashpw(password, entry.salt)
+        test_hash = bcrypt.hashpw(password.encode('utf-8'), entry.salt)
         return safe_equals(test_hash, entry.password_hash)
 
     def change_password(self, session, username, password):

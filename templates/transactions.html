@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from rent.template_utils import format_cents %}
+
+{% block body %}
+<h2>Transactions</h2>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>Date</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Amount</th>
+    <th>Note</th>
+  </tr>
+  </thead>
+  <tbody>
+    {% for txn in transactions %}
+    <tr>
+      <td>{{ txn.date.strftime("%m/%d %H:%M") }}</td>
+      <td>{{ txn.from_user }}</td>
+      <td>{{ txn.to_user }}</td>
+      <td>{{ format_cents(txn.amount) }}</td>
+      <td>{{ txn.comment }}</td>
+    </tr>
+    {% end for %}
+  </tbody>
+</p>
+{% end block %}
