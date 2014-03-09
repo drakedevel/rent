@@ -1,25 +1,25 @@
-import rent.main as r
+import sys
+from collections import defaultdict
+
+import rent.main as rent
+from rent.model import User
 from rent.ui_methods import format_cents
 
-import sys
+rent.script()
+model = rent.model
 
-r.script()
+THRESHOLD = 10000
 
-def debt_message(person, amount):
-    if amount > 0:
-        say = "%s more than" % (format_cents(None, amount))
-    elif amount == 0:
-        say = 'just'
-    else:
-        say = "%s less than" % (format_cents(None, -amount))
+def debt_message(person, txns):
+    bullets = '\n'.join('    - %s to %s' % (format_cents(None, a), d) for d, a in txns)
     msg = '''\
 To: %s
-Subject: End-of-month rent is due
+Subject: Rent rebalance required
 
-You should pay %s your regular rent.
-''' % (person, say)
+You should pay the following:
+%s
+''' % (person, bullets)
     return msg
-
 
 def determine_debts(session):
     #TODO(rpearl) ...actual arg parsing
@@ -28,30 +28,56 @@ def determine_debts(session):
     if dry_run:
         print "This is a dry run. Not sending messages."
 
-    debts = r.model.get_unresolved_transactions(session)
-    users = [u.username for u in r.model.get_users(session)]
-
-    rent = dict( (user, 0) for user in users )
-
+    # Compute aggregate debt
+    debts = model.get_unresolved_transactions(session)
+    users = [u.username for u in model.get_users(session)]
+    rent = {user: 0 for user in users}
     for debt in debts:
         rent[debt.to_user]   -= debt.amount
         rent[debt.from_user] += debt.amount
+    assert sum(rent.values()) == 0
 
-    total_debts = 0
+    # Find users who have properties of Shakespeare
+    need_paid = []
+    can_pay = []
+    for u, r in rent.iteritems():
+        if r <= -THRESHOLD:
+            need_paid.append((r, u))
+        elif r > 0:
+            can_pay.append((-r, u))
 
-    for person, amount in rent.iteritems():
-        total_debts += amount
-        msg = debt_message(person, amount)
+    # Begin paying users to zero
+    can_pay = [u for _, u in sorted(can_pay)]
+    payments = defaultdict(list)
+    for _, u in sorted(need_paid):
+        print "Finding money for %s (need %s)" % (u, format_cents(None, rent[u]))
+        for u2 in can_pay:
+            if rent[u2] > 0:
+                to_pay = min(rent[u2], -rent[u])
+                rent[u2] -= to_pay
+                rent[u] += to_pay
+                payments[u2].append((u, to_pay))
+            if rent[u] >= 0:
+                break
+        assert rent[u] == 0
+
+    # Inform users of their debts and reconcile ledger
+    for f, txns in payments.iteritems():
+        fu = session.query(User).get(f)
+        for t, amount in txns:
+            tu = session.query(User).get(t)
+            print "%s pays %s %s" % (f, t, format_cents(None, amount))
+            if not dry_run:
+                model.create_transaction(session, t, f, amount, '[automatic] resolving debt')
+
+        msg = debt_message(f, txns)
         if not dry_run:
-            r.model.send_mail(from_user='rent', to_user=person, message=msg)
+            model.send_mail(from_user='rent', to_user=f, message=msg)
         else:
             print msg
 
-    if not dry_run:
-        r.model.resolve_transactions(debts)
-
-    assert total_debts == 0, "Something went wrong resolving debts..."
+    # FIXME(adrake): Resolve transactions ever
 
 if __name__ == '__main__':
-    with r.model.session() as session:
+    with model.session() as session:
         determine_debts(session)
